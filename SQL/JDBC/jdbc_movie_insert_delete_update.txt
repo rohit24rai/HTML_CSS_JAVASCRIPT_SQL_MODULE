@@ -1,0 +1,255 @@
+package com.ltts.movieproject.main;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.util.*;
+
+import com.ltts.movieproject.bo.MovieBo;
+import com.ltts.movieproject.model.Movie1;
+public class MovieMain {
+
+	public static void main(String[] args)throws Exception {
+		// TODO Auto-generated method stub
+		
+		Scanner sc =new Scanner(System.in);
+		System.out.println("1.Insert movie details");
+		System.out.println("2.View Movie");
+		System.out.println("3.Update movieId");
+		System.out.println("4.Delete a movie row");
+		
+		MovieBo mb = new MovieBo();
+		int n = sc.nextInt();
+		
+		switch(n) {
+		case 1:
+			System.out.println("Enter movieId");
+			int movieid = sc.nextInt();
+			System.out.println("Enter moviename");
+			String moviename = sc.next();
+			System.out.println("Enter actor name");
+		    String cast1 = sc.next();
+			System.out.println("Enter actress name");
+			String cast2 = sc.next();
+			System.out.println("Enter releasedate");
+			String releasedate = sc.next();
+			System.out.println("Enter language");
+			String language = sc.next();
+			System.out.println("Enter length");
+			int length = sc.nextInt();
+			System.out.println("Enter movietype");
+			String movietype = sc.next();
+			System.out.println("Enter productionId");
+			int productionid = sc.nextInt();
+			
+			//DB logic
+			Movie1 m = new Movie1(movieid,moviename,cast1,cast2,releasedate,language,length,movietype,productionid);
+			boolean b = mb.insertMovie(m);
+			if(b==false) {
+				System.out.println("Values inserted...");
+			}
+			break;
+		case 2:
+			System.out.println("Movie details");
+			List<Movie1> li = mb.getAllMovies();
+			for(Movie1 m1:li) {
+				System.out.println(m1);
+			}
+			break;
+		case 3:
+			Movie1 m1 = new Movie1();
+			System.out.println("Update movieid");
+			boolean b1 = mb.updateMovie(m1);
+			if(b1==false) {
+				System.out.println("Updated movieid");
+			}
+			break;
+		case 4:
+			Movie1 m2 = new Movie1();
+			System.out.println("Delete movie detail");
+			boolean b2 = mb.deleteMovie(m2);
+			if(b2==false) {
+				System.out.println("Deleted successfully!!!");
+			}
+			break;
+		  }
+		}
+
+}
+--------------------------------------------------------------------------------------------------
+package com.ltts.movieproject.model;
+
+public class Movie1 {
+
+	private int movieid;
+	private String moviename;
+	private String cast1;
+	private String cast2;
+	private String releasedate;
+	private String language;
+	private int length;
+	private String movietype;
+	private int productionid;
+	
+	public Movie1(){
+		super();
+	}
+	public Movie1(int movieid, String moviename, String cast1, String cast2, String releasedate, String language, int length,
+			String movietype, int productionid) {
+		// TODO Auto-generated constructor stub
+		this.movieid = movieid;
+		this.moviename=moviename;
+		this.cast1=cast1;
+		this.cast2=cast2;
+		this.releasedate=releasedate;
+		this.language=language;
+		this.length=length;
+		this.movietype=movietype;
+		this.productionid=productionid;
+	}
+	public int getMovieid() {
+		return movieid;
+	}
+	public void setMovieid(int movieid) {
+		this.movieid = movieid;
+	}
+	public String getMoviename() {
+		return moviename;
+	}
+	public void setMoviename(String moviename) {
+		this.moviename = moviename;
+	}
+	public String getCast1() {
+		return cast1;
+	}
+	public void setCast1(String cast1) {
+		this.cast1 = cast1;
+	}
+	public String getCast2() {
+		return cast2;
+	}
+	public void setCast2(String cast2) {
+		this.cast2 = cast2;
+	}
+	public String getReleasedate() {
+		return releasedate;
+	}
+	public void setReleasedate(String releasedate) {
+		this.releasedate = releasedate;
+	}
+	public String getLanguage() {
+		return language;
+	}
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+	public int getLength() {
+		return length;
+	}
+	public void setLength(int length) {
+		this.length = length;
+	}
+	public String getMovietype() {
+		return movietype;
+	}
+	public void setMovietype(String movietype) {
+		this.movietype = movietype;
+	}
+	public int getProductionid() {
+		return productionid;
+	}
+	public void setProductionid(int productionid) {
+		this.productionid = productionid;
+	}
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "Movie1[movieid="+movieid+",moviename="+moviename+",cast1="+cast1+",cast2="+cast2+",releasedate="+releasedate+",language="+language+",length="+length+",movietype="+movietype+",productioid="+productionid+"]";
+	}
+	
+	
+
+}
+------------------------------------------------------------------------------------------------
+package com.ltts.movieproject.bo;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import com.ltts.movieproject.model.Movie1;
+
+//import com.ltts.movieproject.main.MovieMain;
+
+public class MovieBo {
+	
+	public boolean insertMovie(Movie1 m)throws Exception{
+		// DB logic
+		
+		Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/demodb","root","Jahnavee45&");
+		Statement s = c.createStatement();
+		boolean b = s.execute("insert into movie values("+m.getMovieid()+",'"+m.getMoviename()+"','"+m.getCast1()+"','"+m.getCast2()+"','"+m.getReleasedate()+"','"+m.getLanguage()+"',"+m.getLength()+",'"+m.getMovietype()+"',"+m.getProductionid()+")");
+		c.close();
+		return false;
+	}
+	
+	public List<Movie1> getAllMovies()throws Exception{
+		List<Movie1> al = new ArrayList<Movie1>();
+		
+		Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/demodb","root","Jahnavee45&");
+		PreparedStatement ps = c.prepareStatement("select * from movie");
+		ResultSet rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			al.add(new Movie1(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7), rs.getString(8), rs.getInt(9)));
+		}
+		c.close();
+		return al;
+		
+		
+	}
+	
+	public boolean updateMovie(Movie1 m)throws Exception{
+		
+		String sql = "update movie set movieid=? where moviename=?";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the moviename to update movieid");
+		String moviename = sc.next();
+		System.out.println("Enter updated movieid");
+		int movieid = sc.nextInt();
+		try(Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/demodb","root","Jahnavee45&");
+		PreparedStatement ps = c.prepareStatement(sql);){
+			ps.setInt(1,movieid);
+			ps.setString(2,moviename);
+			ps.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+		
+	}
+	
+	public boolean deleteMovie(Movie1 m)throws Exception{
+		String sql = "delete from movie where movieid=?";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter movieid");
+		int movieid = sc.nextInt();
+		try(Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/demodb","root","Jahnavee45&");
+		PreparedStatement ps = c.prepareStatement(sql);){
+			ps.setInt(1,movieid);
+			ps.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+
+}
