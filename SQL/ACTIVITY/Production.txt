@@ -1,0 +1,29 @@
+package demomain;
+	import java.sql.*;
+	import java.util.*;
+public class jdbc {
+	public static void main(String[] args) throws Exception {
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter Team Name");
+		String co= sc.next();
+		System.out.println("Enter Player Name");
+		String play= sc.next();
+		
+		System.out.println("Enter Runs");
+		int run= sc.nextInt();
+		
+		System.out.println("Enter Team ID");
+		int tid= sc.nextInt();
+		
+		System.out.println("Enter Skill Name");
+		String skill= sc.next();
+		
+		System.out.println("Enter player no");
+		int pno= sc.nextInt();
+		//Class.forName("com.mysql.jdbc.Driver");
+		Connection con=DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/jdbc","root","Jollyjeeva@05");
+		Statement st=con.createStatement();
+		st.execute("INSERT INTO team1 VALUES('"+co+"','"+play+"',"+run+","+tid+",'"+skill+"',"+pno+")");
+System.out.println("inserted successfully");
+
+		sc.close();
